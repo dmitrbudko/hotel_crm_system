@@ -18,29 +18,10 @@ namespace hotel_crm_system
             InitializeComponent();
             LoadRoomData();
             LoadEmployeeData();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
+            InitializeTimer();
 
         }
 
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-        private void dataGridView4_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
 
         static void CheckConnection()
         {
@@ -62,7 +43,7 @@ namespace hotel_crm_system
 
         private void LoadRoomData()
         {
-            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query1 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 0";
             string query2 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 10";
             string query3 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 20";
@@ -76,9 +57,27 @@ namespace hotel_crm_system
                 FillDataGridView(dataGridView3, query3, connection);
             }
         }
+
+        private void UpdateRoomData()
+        {
+            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string query1 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 0";
+            string query2 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 10";
+            string query3 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 20";
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                FillDataGridView(dataGridView1, query1, connection);
+                FillDataGridView(dataGridView2, query2, connection);
+                FillDataGridView(dataGridView3, query3, connection);
+            }
+        }
+
         private void LoadEmployeeData()
         {
-            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query = "SELECT Name, Position, WorkPlan FROM Employees";
 
             dataGridView4.Rows.Clear();
@@ -114,6 +113,71 @@ namespace hotel_crm_system
                     }
                 }
             }
+
+        }
+
+        private void UpdateEmployeeData()
+        {
+            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string query = "SELECT Name, Position, WorkPlan FROM Employees";
+
+            dataGridView4.Rows.Clear();
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            dataGridView4.Rows.Add(reader["Name"], reader["Position"], reader["WorkPlan"]);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void InitializeTimer()
+        {
+            Timer timer = new Timer();
+            timer.Interval = 10000;
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            UpdateRoomData();
+            UpdateEmployeeData();
+        }
+
+        private void CEOForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+        private void dataGridView4_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
         }
     }

@@ -34,7 +34,7 @@ class db_processing
         using (SQLiteConnection connection = new SQLiteConnection(connectionString))
         {
             connection.Open();
-            // Создаём таблицы
+
             string createRoomsTableQuery = "CREATE TABLE Rooms (RoomID INTEGER PRIMARY KEY, Floor INTEGER, RoomNumber INTEGER, capacity INTEGER, Status TEXT, ClientID INTEGER, ManagerID INTEGER)";
             string createEmployeesTableQuery = "CREATE TABLE Employees (EmployeeID INTEGER PRIMARY KEY, Name TEXT, Position TEXT, WorkPlan TEXT)";
             string createClientsTableQuery = "CREATE TABLE Clients (ClientID INTEGER PRIMARY KEY, Name TEXT, Phone_number TEXT)";
@@ -42,9 +42,9 @@ class db_processing
             ExecuteQuery(connection, createRoomsTableQuery);
             ExecuteQuery(connection, createEmployeesTableQuery);
             ExecuteQuery(connection, createClientsTableQuery);
-            //Заполняем таблицу комнат
+    
             FillRoomsTable(connection);
-            //Дабавляем в список работников директора и менеджера по персоналу и 2-х менеджеров по продажам
+  
             string addDirectorQuery = "INSERT INTO Employees (Name, Position, WorkPlan) VALUES ('Ivan Directorov', 'Director', '8:00 - 18:00')";
             ExecuteQuery(connection, addDirectorQuery);
             string addHRmanager = "INSERT INTO Employees (Name, Position, WorkPlan) VALUES ('Anatoliy Personalchenko', 'HR manager', '8:00 - 18:00');";
@@ -66,12 +66,12 @@ class db_processing
         foreach (int floor in floors)
         {
             int capacity = capacities[floor - 1];
-            for (int roomNumber = 1; roomNumber <= 10; roomNumber++) // 10 комнат на каждом этаже
+            for (int roomNumber = 1; roomNumber <= 10; roomNumber++)
             {
                 totalRooms++;
-                string status = "available";
-                int clientID = -1; // null
-                int managerID = -1; // null
+                string status = "Available";
+                int clientID = -1;
+                int managerID = -1; 
 
                 string insertQuery = $"INSERT INTO Rooms (Floor, RoomNumber, Capacity, Status, ClientID, ManagerID) VALUES ({floor}, {roomNumber}, {capacity}, '{status}', {clientID}, {managerID})";
                 ExecuteQuery(connection, insertQuery);
@@ -81,21 +81,19 @@ class db_processing
         Console.WriteLine($"Вставлено {totalRooms} записей в таблицу Rooms.");
     }
 
-    static void CheckInClient(SQLiteConnection connection, int roomID, string clientName, string clientPhone, string managerName)
+    public static void CheckInClient(SQLiteConnection connection, int roomID, string clientName, string clientPhone, string managerName)
     {
         using (SQLiteCommand command = new SQLiteCommand(connection))
         {
             connection.Open();
-
-            // Проверяем, есть ли клиент уже в базе
             command.CommandText = $"SELECT ClientID FROM Clients WHERE Name = '{clientName}'";
             object clientIDObj = command.ExecuteScalar();
             int clientID;
-            if (clientIDObj == null) // Если клиента нет в базе, добавляем его
+            if (clientIDObj == null)
             {
                 command.CommandText = $"INSERT INTO Clients (Name, Phone_number) VALUES ('{clientName}', '{clientPhone}')";
                 command.ExecuteNonQuery();
-                command.CommandText = "SELECT last_insert_rowid()"; // Получаем последний вставленный идентификатор
+                command.CommandText = "SELECT last_insert_rowid()"; //последний вставленный идентификатор
                 clientID = Convert.ToInt32(command.ExecuteScalar());
             }
             else
@@ -110,7 +108,28 @@ class db_processing
         }
     }
 
-    static void CheckOutClient(SQLiteConnection connection, int roomID)
+    public static string GetRoomStatus(SQLiteConnection connection, int roomID)
+    {
+        connection.Open();
+        string status = "";
+        string query = "SELECT Status FROM Rooms WHERE RoomID = @RoomID";
+
+        using (SQLiteCommand command = new SQLiteCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@RoomID", roomID);
+
+            using (SQLiteDataReader reader = command.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    status = reader["Status"].ToString();
+                }
+            }
+        }
+        connection.Close();
+        return status;
+    }
+    public static void CheckOutClient(SQLiteConnection connection, int roomID)
     {
         using (SQLiteCommand command = new SQLiteCommand(connection))
         {
@@ -121,7 +140,7 @@ class db_processing
         }
     }
 
-    static void EmploySalesMan(SQLiteConnection connection, string name, string position, string workPlan)
+    public static void EmploySomeone(SQLiteConnection connection, string name, string position, string workPlan)
     {
         using (SQLiteCommand command = new SQLiteCommand(connection))
         {
@@ -133,26 +152,23 @@ class db_processing
         }
     }
 
-    static void DismissEmployee(SQLiteConnection connection, int employeeID)
+    public static void DismissEmployee(SQLiteConnection connection, string employeeName)
     {
         using (SQLiteCommand command = new SQLiteCommand(connection))
         {
-            connection.Open();
-
-            // Проверяем должность сотрудника
-            command.CommandText = $"SELECT Position FROM Employees WHERE EmployeeID = {employeeID}";
+            command.CommandText = $"SELECT Position FROM Employees WHERE Name = @Name";
+            command.Parameters.AddWithValue("@Name", employeeName);
             string position = command.ExecuteScalar()?.ToString();
 
-            if (position == "Sales manager")
+            if (position != "Director" && position != "HR manager")
             {
-                // Удаляем сотрудника
-                command.CommandText = $"DELETE FROM Employees WHERE EmployeeID = {employeeID}";
+                command.CommandText = $"DELETE FROM Employees WHERE Name = @Name";
                 command.ExecuteNonQuery();
-                Console.WriteLine($"Сотрудник с ID {employeeID} уволен.");
+                Console.WriteLine($"Сотрудник с именем {employeeName} уволен.");
             }
             else
             {
-                Console.WriteLine($"Сотрудник с ID {employeeID} не является менеджером по продажам и не может быть уволен.");
+                Console.WriteLine($"Сотрудник с именем {employeeName} не может быть уволен.");
             }
 
             connection.Close();
@@ -160,26 +176,25 @@ class db_processing
     }
 
 
-    static void UpdateWorkPlan(SQLiteConnection connection, int employeeID, string newWorkPlan)
+
+    public static void UpdateWorkPlan(SQLiteConnection connection, string employeeName, string newWorkPlan)
     {
         using (SQLiteCommand command = new SQLiteCommand(connection))
         {
-            connection.Open();
-
-            // Проверяем должность сотрудника
-            command.CommandText = $"SELECT Position FROM Employees WHERE EmployeeID = {employeeID}";
+            command.CommandText = "SELECT Position FROM Employees WHERE Name = @employeeName";
+            command.Parameters.AddWithValue("@employeeName", employeeName);
             string position = command.ExecuteScalar()?.ToString();
 
-            if (position == "Sales manager")
+            if (position != "Director" && position != "HR manager")
             {
-                // Обновляем рабочий план сотрудника
-                command.CommandText = $"UPDATE Employees SET WorkPlan = '{newWorkPlan}' WHERE EmployeeID = {employeeID}";
+                command.CommandText = "UPDATE Employees SET WorkPlan = @newWorkPlan WHERE Name = @employeeName";
+                command.Parameters.AddWithValue("@newWorkPlan", newWorkPlan);
                 command.ExecuteNonQuery();
-                Console.WriteLine($"Рабочий план для сотрудника с ID {employeeID} изменен на {newWorkPlan}.");
+                Console.WriteLine($"Рабочий план для сотрудника с именем {employeeName} изменен на {newWorkPlan}.");
             }
             else
             {
-                Console.WriteLine($"Сотрудник с ID {employeeID} не является менеджером по продажам, поэтому его рабочий план не может быть изменен.");
+                Console.WriteLine($"Сотрудник с именем {employeeName} не является менеджером по продажам, поэтому его рабочий план не может быть изменен.");
             }
 
             connection.Close();
@@ -192,14 +207,11 @@ class db_processing
     {
         using (SQLiteCommand command = new SQLiteCommand(connection))
         {
-
-            // Проверяем статус комнаты
             command.CommandText = $"SELECT Status FROM Rooms WHERE RoomID = {roomID}";
             string status = command.ExecuteScalar().ToString();
 
-            if (status == "available")
+            if (status == "Available")
             {
-                // Изменяем статус комнаты на "Cleaning"
                 command.CommandText = $"UPDATE Rooms SET Status = 'Cleaning' WHERE RoomID = {roomID}";
                 command.ExecuteNonQuery();
                 Console.WriteLine($"Уборка назначена для комнаты с ID {roomID}");

@@ -42,10 +42,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
-            this.label5 = new System.Windows.Forms.Label();
             this.employee_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.employee_position = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.employee_workplan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -175,15 +175,6 @@
             this.dataGridView4.TabIndex = 7;
             this.dataGridView4.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView4_CellContentClick);
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1028, 66);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Employees table";
-            // 
             // employee_name
             // 
             this.employee_name.HeaderText = "Name";
@@ -203,6 +194,15 @@
             this.employee_workplan.Name = "employee_workplan";
             this.employee_workplan.ReadOnly = true;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(1028, 66);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(84, 13);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "Employees table";
+            // 
             // CEOForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -219,6 +219,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "CEOForm";
             this.Text = "CEOForm";
+            this.Load += new System.EventHandler(this.CEOForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
