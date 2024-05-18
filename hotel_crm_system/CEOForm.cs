@@ -43,7 +43,7 @@ namespace hotel_crm_system
 
         private void LoadRoomData()
         {
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query1 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 0";
             string query2 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 10";
             string query3 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 20";
@@ -60,7 +60,7 @@ namespace hotel_crm_system
 
         private void UpdateRoomData()
         {
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query1 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 0";
             string query2 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 10";
             string query3 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 20";
@@ -77,7 +77,7 @@ namespace hotel_crm_system
 
         private void LoadEmployeeData()
         {
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query = "SELECT Name, Position, WorkPlan FROM Employees";
 
             dataGridView4.Rows.Clear();
@@ -118,7 +118,7 @@ namespace hotel_crm_system
 
         private void UpdateEmployeeData()
         {
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query = "SELECT Name, Position, WorkPlan FROM Employees";
 
             dataGridView4.Rows.Clear();
