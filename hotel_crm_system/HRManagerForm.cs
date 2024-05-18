@@ -24,7 +24,7 @@ namespace hotel_crm_system
 
         private void LoadEmployeeData()
         {
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query = "SELECT Name, Position, WorkPlan FROM Employees";
 
             dataGridView1.Rows.Clear();
@@ -48,7 +48,7 @@ namespace hotel_crm_system
 
         private void UpdateEmployeeData()
         {
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query = "SELECT Name, Position, WorkPlan FROM Employees";
 
             dataGridView1.Rows.Clear();
@@ -130,5 +130,38 @@ namespace hotel_crm_system
         {
 
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string textName = textBox1.Text;
+            string textPosition = textBox2.Text;
+            string textWorkplan = textBox3.Text;
+            if (string.IsNullOrEmpty(textName) || string.IsNullOrEmpty(textPosition)) 
+            {
+                MessageBox.Show("Complete filling the data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else 
+            {
+                SQLiteConnection connection = db_processing.GetConnection();
+                db_processing.EmploySomeone(connection, textName, textPosition, textWorkplan);
+                DialogResult result = MessageBox.Show($"Are you sure you want to upload {textName}'s data?", "Confirm upload", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    MessageBox.Show("Data uploaded successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                UpdateEmployeeData();
+            }
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
     }

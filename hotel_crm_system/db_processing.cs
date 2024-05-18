@@ -144,7 +144,6 @@ class db_processing
     {
         using (SQLiteCommand command = new SQLiteCommand(connection))
         {
-            connection.Open();
             command.CommandText = $"INSERT INTO Employees (Name, Position, WorkPlan) VALUES ('{name}', '{position}', '{workPlan}')";
             command.ExecuteNonQuery();
 

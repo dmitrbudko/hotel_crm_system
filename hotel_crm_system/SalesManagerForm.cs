@@ -60,7 +60,7 @@ namespace hotel_crm_system
             buttonColumn3.Width = 50;
             dataGridView3.Columns.Add(buttonColumn3);
 
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query1 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 0";
             string query2 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 10";
             string query3 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 20";
@@ -77,7 +77,7 @@ namespace hotel_crm_system
         }
         private void UpdateRoomData()
         {
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query1 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 0";
             string query2 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 10";
             string query3 = "SELECT RoomNumber, Status FROM Rooms LIMIT 10 OFFSET 20";
@@ -95,7 +95,7 @@ namespace hotel_crm_system
         public static List<string> GetSalesManagers()
         {
             List<string> salesManagers = new List<string>();
-            string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+            string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
             string query = "SELECT Name FROM Employees WHERE Position = 'Sales manager';";
 
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
@@ -272,7 +272,7 @@ namespace hotel_crm_system
                 string selectedSalesManager = comboBox1.SelectedItem.ToString();
                 string textName = textBox1.Text;
                 string textNumber = textBox2.Text;
-                string connectionString = "Data Source=C:\\Users\\Enjoy\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
+                string connectionString = "Data Source=C:\\Users\\Valenok\\source\\repos\\hotel_crm_system\\hotel_crm_system\\hotel_database.db;Version=3;";
                 SQLiteConnection connection = new SQLiteConnection(connectionString);
 
                 string roomStatus = db_processing.GetRoomStatus(connection, roomID);
